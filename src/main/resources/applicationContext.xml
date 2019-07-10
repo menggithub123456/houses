@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!--spring容器加载java的属性文件-->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+    <!--spring整合mybatis:
+       1.定义数据源组件
+       2.创建sqlSessionFactory
+    -->
+	 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		 <property name="driverClassName" value="${driverClassName}"></property>
+		 <property name="url" value="${url}"></property>
+		 <property name="username" value="${username}"></property>
+		 <property name="password" value="${password}"></property>
+	 </bean>
+
+	 <!--创建sqlSessionFactory-->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+	</bean>
+
+	<!--spring添加dao层组件-->
+	<!--生成dao接口的实现bean对象
+        生成的bean对象id就是接口名称首字母小写
+    -->
+	<bean id="mapper" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!--扫描dao层所有的接口并生成bean对象-->
+		<property name="basePackage" value="com.team.house.mapper"></property>
+		<!--添加sqlSessionfactroy-->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+
+	<!--扫描业务层组件-->
+	<context:component-scan base-package="com.team.house.service.impl"></context:component-scan>
+
+	<!--配置注解事务支持-->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<!-- 注解方式配置事物 -->
+	<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
+
+</beans>
