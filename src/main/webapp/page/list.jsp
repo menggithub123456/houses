@@ -1,6 +1,5 @@
 ﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
 <!-- saved from url=(0030)http://localhost:8080/House-2/ -->
 <HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>青鸟租房 - 首页</TITLE>
 <META content="text/html; charset=utf-8" http-equiv=Content-Type>
@@ -55,7 +54,9 @@
 </HEAD>
 <BODY>
 <DIV id=header class=wrap>
-<DIV id=logo><IMG src="../images/logo.gif"></DIV></DIV>
+<DIV id=logo><IMG src="../images/logo.gif">
+  <LABEL class="ui-green searchs"><a href="login.jsp" >用户登录</a></LABEL>
+</DIV></DIV>
 <DIV >
   <DIV id=navbar class=wrap>
     <LI class=bold>房屋信息</LI>
@@ -80,7 +81,7 @@
     </form>
 </DIV>
 <DIV class="main wrap">
-  <c:if test="${!empty info.list}">
+    <c:if test="${!empty info.list}">
   <c:forEach items="${info.list}" var="h">
 <TABLE class=house-list>
   <TBODY>
@@ -111,4 +112,4 @@ class=total>${info.pageNum}/${info.pages}页</SPAN></DIV>
 <DIV id=footer class=wrap>
 <DL>
   <DT>青鸟租房 © 2018 北大青鸟 京ICP证1000001号</DT>
-  <DD>关于我们 · 联系方式 · 意见反馈 · 帮助中心</DD></DL></DIV></BODY></HTML>
+    <DD>关于我们 · 联系方式 · 意见反馈 · 帮助中心</DD></DL></DIV></DIV></BODY></HTML></>

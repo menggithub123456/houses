@@ -1,5 +1,4 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
 <!-- saved from url=(0032)http://localhost:8080/HouseRent/ -->
 <HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>青鸟租房 - 用户登录</TITLE>
 <META content="text/html; charset=utf-8" http-equiv=Content-Type><LINK 
@@ -7,12 +6,11 @@ rel=stylesheet type=text/css href="../css/style.css">
 <META name=GENERATOR content="MSHTML 8.00.7601.17514">
 <script language="JavaScript" src="../admin/js/jquery-1.8.3.js"></script>
   <script language="JavaScript">
-      var code; //在全局定义验证码
+      /*var code; //在全局定义验证码
       //产生验证码
       window.onload = function() {
           createCode();
       }
-
       function createCode() {
           code = "";
           var codeLength = 5; //验证码的长度
@@ -38,7 +36,32 @@ rel=stylesheet type=text/css href="../css/style.css">
                   $("#sp").html("^-^");
               }
           });
+      });*/
+      var objTime;
+      $(function () {
+          $("#codeBtu").click(function () {
+              $.post("getSms",{"phone":$("#phone").val()},function (data) {
+                    if (data.result>0){//验证码发送成功
+                       objTime=setInterval("backTime()",1000);
+                    }else {
+                        alert("失败");
+                    }
+              },"json")
+          });
       });
+      var time=120;
+      function backTime() {
+           if (time!=0){
+                time--;
+                $("#codeBtu")[0].disabled=true;
+                $("#codeBtu").css("padding","5px","10px");
+                $("#codeBtu").val(time+"秒");
+           }else {
+               clearInterval(objTime);//清除定时
+               $("#codeBtu")[0].disabled=false;
+               $("#codeBtu").val("获取验证码");
+           }
+      }
   </script>
 </HEAD>
 <BODY>
@@ -62,7 +85,17 @@ rel=stylesheet type=text/css href="../css/style.css">
     <TD class=field>密　　码：</TD>
     <TD><!-- <input type="password" class="text" name="password" /> --><INPUT 
       id=user_password class=text type=password name=password> </TD></TR>
-  <tr>
+  <TR>
+    <TD class=field>手 机 号：</TD>
+    <TD>
+      <INPUT id="phone" type="text" name=phone style="line-height: 10px">
+      <input type="button" id="codeBtu" value="获取验证码">
+    </TD></TR>
+  <TR>
+    <TD class=field>验 证 码：</TD>
+    <TD>
+      <INPUT id="code" class=text type="text" name=code> </TD></TR>
+  <%--<tr>
 		<td class="field">验 证 码：</td>
 		<td><div>
     <input type="text" id="input" />
@@ -70,7 +103,7 @@ rel=stylesheet type=text/css href="../css/style.css">
     <a href="#" onclick="createCode()">看不清楚</a><br>
           <span id="sp"></span>
   </div></td>
-</tr>
+</tr>--%>
 </TBODY></TABLE>
 <DIV class=buttons> <INPUT value=登陆 type="submit">
   <INPUT onclick='document.location="regs.jsp"' value=注册 type=button>

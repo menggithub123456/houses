@@ -36,16 +36,23 @@ public class UsersController {
     }
     //用户登录
     @RequestMapping("loginUser")
-    public String loginUser(String name, String password, Model model, HttpSession session){
-        Users user = usersService.login(name, password);
-        if(user==null){
-            model.addAttribute("info","用户名和密码不正确");
+    public String loginUser(String code,String name, String password, Model model, HttpSession session){
+        //code代表从前台输入的验证码
+        String savecode =(String) session.getAttribute("savecode");//后台生成的验证码
+        if (code.equals(savecode)){
+            Users user = usersService.login(name, password);
+            if(user==null){
+                model.addAttribute("info","用户名和密码不正确");
+                return "login";
+            }else{
+                session.setAttribute("loginInfo",user);
+                //设置保存的有效时间
+                session.setMaxInactiveInterval(300);  //以秒为单位
+                return "redirect:showMoreHouse";   //用户登入后的管理页
+            }
+        }else {
+            model.addAttribute("info","验证码错误或过期");
             return "login";
-        }else{
-            session.setAttribute("loginInfo",user);
-            //设置保存的有效时间
-            session.setMaxInactiveInterval(300);  //以秒为单位
-            return "redirect:showMoreHouse";   //用户登入后的管理页
         }
     }
 }
